@@ -5,5 +5,6 @@ public interface IDbManager {
     Boolean isPlayerRegistered(String username);
     void addPlayerToDatabase(String username, String password);
     void changePassword(String username, String password);
+    void updateLastSeenAndAddress(String username, String address);
     void reloadDb();
 }

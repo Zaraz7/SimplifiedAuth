@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class JsonDbManager implements IDbManager {
     private final File dbFile;
@@ -75,6 +77,16 @@ public class JsonDbManager implements IDbManager {
             return;
         }
         player.addProperty("password", Utils.hashPassword(password));
+        saveDb();
+    }
+
+    public void updateLastSeenAndAddress(String username, String address){
+        JsonObject player = findPlayer(username);
+        if (player == null){
+            return;
+        }
+        player.addProperty("last_seen", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        player.addProperty("address", address);
         saveDb();
     }
 
