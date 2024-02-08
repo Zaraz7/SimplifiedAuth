@@ -18,6 +18,8 @@ final class ServerConfigurationManagerMixin {
     }
     @Inject(method="playerLoggedOut", at=@At("TAIL"))
     public void onPlayerLoggedOut(EntityPlayerMP player, CallbackInfo ci){
+        String address = player.playerNetServerHandler.netManager.getRemoteAddress().toString();
+        SimplifiedAuth.dbManager.updateLastSeenAndAddress(player.username, address.substring(1, address.indexOf(':')));
         Player playerObj = SimplifiedAuth.playerManager.get(player);
         playerObj.destroy();
     }
