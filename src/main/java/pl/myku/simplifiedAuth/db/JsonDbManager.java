@@ -11,13 +11,15 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class JsonDbManager implements IDbManager {
     private final File dbFile;
     private JsonObject db;
     public static final Gson GSON = new Gson();
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public JsonDbManager(String path, String filename){
         dbFile = new File(path + filename + ".json");
         reloadDb();
@@ -85,9 +87,27 @@ public class JsonDbManager implements IDbManager {
         if (player == null){
             return;
         }
-        player.addProperty("last_seen", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        player.addProperty("last_seen", LocalDateTime.now().format(formatter));
         player.addProperty("address", address);
         saveDb();
+    }
+    public Boolean isSessionValid(String username, String address){
+        JsonObject player = findPlayer(username);
+        if (player == null){
+            return false;
+        }
+        String fieldValue = player.get("address").getAsString();
+        if (fieldValue == null){
+            return false;
+        }
+        if (!fieldValue.equals(address)) {
+            return false;
+        }
+        fieldValue = player.get("last_seen").getAsString();
+        if (fieldValue == null){
+            return false;
+        }
+        return Duration.between(LocalDateTime.parse(fieldValue, formatter), LocalDateTime.now()).toHours() < 48;
     }
 
     public Boolean isPlayerRegistered(String username){
