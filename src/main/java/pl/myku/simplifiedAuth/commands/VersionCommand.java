@@ -6,7 +6,7 @@ public class VersionCommand extends Command {
 
     public boolean execute(CommandHandler handler, CommandSender sender, String[] args) {
         if(sender.getPlayer() != null) {
-            sender.sendMessage("Version 0.0.2.0 ");
+            sender.sendMessage("Simplified Auth: Version 0.0.2.1 ");
             return true;
         }
         else{
