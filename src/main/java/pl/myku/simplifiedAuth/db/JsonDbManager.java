@@ -96,10 +96,10 @@ public class JsonDbManager implements IDbManager {
         if (player == null){
             return false;
         }
-        String fieldValue = player.get("address").getAsString();
-        if (fieldValue == null){
+        if (!player.has("address")){
             return false;
         }
+        String fieldValue = player.get("address").getAsString();
         if (!fieldValue.equals(address)) {
             return false;
         }
@@ -108,10 +108,10 @@ public class JsonDbManager implements IDbManager {
         if (hours < 0) {
             return true;
         }
-        fieldValue = player.get("last_seen").getAsString();
-        if (fieldValue == null){
+        if (!player.has("last_seen")){
             return false;
         }
+        fieldValue = player.get("last_seen").getAsString();
         return Duration.between(LocalDateTime.parse(fieldValue, formatter), LocalDateTime.now()).toHours() < hours;
     }
 
