@@ -1,7 +1,7 @@
 # Simplified auth
 This is server sided babric modification for Better Than Adventure that allows for authorization using ingame commands, such as /register or /login
 <br/>
-In current form only possible to use JSON file based "database"
+In current form only possible to use JSON file based "database". Sessions are supported.
 ## Licenses
 Libraries used in this project are using:
 - jBcrypt (MIT): https://github.com/jeremyh/jBCrypt
@@ -15,4 +15,5 @@ Currently config allows for setting only
 - DatabaseManager -specifies which database engine would be used for storing player data (currently only JSON file).
 - Address - when specified json dbmanager, Address would point to directory where "database" file would reside.
 - Schema - when specified json dbmanager, it would point at name of json file that would store usernames and encrypted passwords.
+- SessionLife - session lifetime in hours (default is 48). Available as an integer. If you specify -1, the session time will be unlimited (not recommended).
 Modification in json manager mode should by default create required paths and files. 
