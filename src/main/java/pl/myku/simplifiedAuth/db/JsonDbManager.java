@@ -103,11 +103,16 @@ public class JsonDbManager implements IDbManager {
         if (!fieldValue.equals(address)) {
             return false;
         }
+
+        long hours = SimplifiedAuth.config.getInt("SessionLife");
+        if (hours < 0) {
+            return true;
+        }
         fieldValue = player.get("last_seen").getAsString();
         if (fieldValue == null){
             return false;
         }
-        return Duration.between(LocalDateTime.parse(fieldValue, formatter), LocalDateTime.now()).toHours() < 48;
+        return Duration.between(LocalDateTime.parse(fieldValue, formatter), LocalDateTime.now()).toHours() < hours;
     }
 
     public Boolean isPlayerRegistered(String username){
