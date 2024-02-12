@@ -1,5 +1,5 @@
 # Simplified auth
-This is serversided babric modification for Better Than Adventure that allows for authorization using ingame commands, such as /register or /login
+This is server sided babric modification for Better Than Adventure that allows for authorization using ingame commands, such as /register or /login
 <br/>
 In current form only possible to use JSON file based "database"
 ## Licenses
@@ -8,7 +8,7 @@ Libraries used in this project are using:
 - halplibe (CC0): https://github.com/Turnip-Labs/bta-halplibe
 ## Setup
 1. Mod to work would require working server instance of Babric BTA server ([available here](https://github.com/Turnip-Labs/babric-instance-repo/releases)) with halplibe version at least 3.2.1 (which was by default included in BTA instance) installed.<br/>
-2. Don't forget about read/write privilages on server directory and any other directory specified by config (by default should be available for server but still, this can sometime happen)
+2. Don't forget about read/write privileges on server directory and any other directory specified by config (by default should be available for server but still, this can sometime happen)
 
 ## Config
 Currently config allows for setting only 
