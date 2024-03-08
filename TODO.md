@@ -1,3 +1,4 @@
 - [ ] make password hide in logs
 - [ ] change message in login
 - [ ] teleport player in sky or null coordinates, when it is being authorized
+- [ ] change version command 
