@@ -12,8 +12,7 @@
         "EntityPlayerMixin",
         "EntityPlayerMPMixin",
         "ServerConfigurationManagerMixin",
-        "NetServerHandlerMixin",
-        "NetworkManagerMixin"
+        "NetServerHandlerMixin"
     ],
     "injectors": {
         "defaultRequire": 1
