@@ -19,8 +19,11 @@ final class ServerConfigurationManagerMixin {
             playerObj.authorize();
             player.addChatMessage("greeter.authorized");
         } else {
-            player.addChatMessage("greeter.registration");
-            player.addChatMessage("greeter.login");
+            if (SimplifiedAuth.dbManager.isPlayerRegistered(player.username)){
+                player.addChatMessage("greeter.login");
+            } else {
+                player.addChatMessage("greeter.registration");
+            }
         }
     }
     @Inject(method="playerLoggedOut", at=@At("TAIL"))
