@@ -1,22 +1,31 @@
 package pl.myku.simplifiedAuth.mixin;
 
+import net.minecraft.core.net.command.*;
 import net.minecraft.core.net.packet.*;
 import net.minecraft.core.util.helper.AES;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.player.EntityPlayerMP;
+import org.apache.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import net.minecraft.server.net.handler.NetServerHandler;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.myku.simplifiedAuth.SimplifiedAuth;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(value = NetServerHandler.class, remap = false)
 abstract class NetServerHandlerMixin {
 
     private static long teleportTimeout = 0;
     private static int timeout = 600;
+    @Shadow public static Logger logger = Logger.getLogger("Minecraft");
     @Shadow private EntityPlayerMP playerEntity;
+    @Shadow private MinecraftServer mcServer;
 
     @Shadow public abstract void teleportAndRotate(double d, double d1, double d2, float f, float f1);
 
@@ -82,12 +91,35 @@ abstract class NetServerHandlerMixin {
         try {
             String msg = AES.decrypt(packet.message, AES.keyChain.get(this.playerEntity.username));
             if(msg.contains("/login") || msg.contains("/register")){
-                return;
+                handleHiddenSlashCommand(msg);
+                //return;
             }
         } catch (Exception e) {
             SimplifiedAuth.LOGGER.error(e.getMessage());
         }
         ci.cancel();
+    }
+    @Unique
+    public void handleHiddenSlashCommand(String s){
+        ServerPlayerCommandSender sender = new ServerPlayerCommandSender(this.mcServer, this.playerEntity);
+        ServerCommandHandler handler = new ServerCommandHandler(this.mcServer);
+        String[] args = s.substring(1).split(" ");
+        String[] args1 = new String[args.length - 1];
+        System.arraycopy(args, 1, args1, 0, args.length - 1);
+        for (Command command : Commands.commands) {
+            if (!command.isName(args[0])) continue;
+            logger.info("Player " + ((PlayerCommandSender)sender).getPlayer().username + " tried " + args[0]);
+            try {
+                boolean success = command.execute(handler, sender, args1);
+                if (!success) {
+                    command.sendCommandSyntax(handler, sender);
+                }
+            } catch (CommandError e) {
+                sender.sendMessage(TextFormatting.RED + e.getMessage());
+            } catch (Throwable e) {
+                sender.sendMessage(TextFormatting.RED + "Error!");
+            }
+        }
     }
 
     @Inject(method="handleAnimation", at=@At("HEAD"), cancellable = true)
