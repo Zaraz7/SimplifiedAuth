@@ -11,11 +11,15 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class JsonDbManager implements IDbManager {
     private final File dbFile;
     private JsonObject db;
     public static final Gson GSON = new Gson();
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public JsonDbManager(String path, String filename){
         dbFile = new File(path + filename + ".json");
         reloadDb();
@@ -77,7 +81,38 @@ public class JsonDbManager implements IDbManager {
         player.addProperty("password", Utils.hashPassword(password));
         saveDb();
     }
+    public void updateLastSeenAndAddress(String username, String address){
+        JsonObject player = findPlayer(username);
+        if (player == null){
+            return;
+        }
+        player.addProperty("last_seen", LocalDateTime.now().format(formatter));
+        player.addProperty("address", address);
+        saveDb();
+    }
+    public Boolean isSessionValid(String username, String address){
+        JsonObject player = findPlayer(username);
+        if (player == null){
+            return false;
+        }
+        if (!player.has("address")){
+            return false;
+        }
+        String fieldValue = player.get("address").getAsString();
+        if (!fieldValue.equals(address)) {
+            return false;
+        }
 
+        long hours = SimplifiedAuth.config.getInt("SessionLife");
+        if (hours < 0) {
+            return true;
+        }
+        if (!player.has("last_seen")){
+            return false;
+        }
+        fieldValue = player.get("last_seen").getAsString();
+        return Duration.between(LocalDateTime.parse(fieldValue, formatter), LocalDateTime.now()).toHours() < hours;
+    }
     public Boolean isPlayerRegistered(String username){
         return findPlayer(username) != null;
     }

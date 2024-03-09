@@ -13,12 +13,26 @@ import pl.myku.simplifiedAuth.SimplifiedAuth;
 final class ServerConfigurationManagerMixin {
     @Inject(method="playerLoggedIn", at=@At("TAIL"))
     public void onPlayerConnect(EntityPlayerMP player, CallbackInfo ci){
-        player.addChatMessage("greeter.registration");
-        player.addChatMessage("greeter.login");
+        String address = player.playerNetServerHandler.netManager.getRemoteAddress().toString();
+        if (SimplifiedAuth.dbManager.isSessionValid(player.username, address.substring(1, address.indexOf(':')))){
+            Player playerObj = SimplifiedAuth.playerManager.get(player);
+            playerObj.authorize();
+            player.addChatMessage("greeter.authorized");
+        } else {
+            if (SimplifiedAuth.dbManager.isPlayerRegistered(player.username)){
+                player.addChatMessage("greeter.login");
+            } else {
+                player.addChatMessage("greeter.registration");
+            }
+        }
     }
     @Inject(method="playerLoggedOut", at=@At("TAIL"))
     public void onPlayerLoggedOut(EntityPlayerMP player, CallbackInfo ci){
         Player playerObj = SimplifiedAuth.playerManager.get(player);
+        if(playerObj.isAuthorized()){
+            String address = player.playerNetServerHandler.netManager.getRemoteAddress().toString();
+            SimplifiedAuth.dbManager.updateLastSeenAndAddress(player.username, address.substring(1, address.indexOf(':')));
+        }
         playerObj.destroy();
     }
 }

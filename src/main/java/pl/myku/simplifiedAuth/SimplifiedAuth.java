@@ -20,6 +20,7 @@ public class SimplifiedAuth implements ModInitializer {
         props.setProperty("DatabaseManager","json");
         props.setProperty("Schema", "users");
         props.setProperty("Address", "./db/");
+        props.setProperty("SessionLife", "48");
         props.setProperty("Port", "");
         props.setProperty("Username", "");
         props.setProperty("Password", "");
