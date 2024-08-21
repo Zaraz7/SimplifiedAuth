@@ -17,12 +17,12 @@ final class ServerConfigurationManagerMixin {
         if (SimplifiedAuth.dbManager.isSessionValid(player.username, address.substring(1, address.indexOf(':')))){
             Player playerObj = SimplifiedAuth.playerManager.get(player);
             playerObj.authorize();
-            player.addChatMessage("greeter.authorized");
+            player.sendTranslatedChatMessage("greeter.authorized");
         } else {
             if (SimplifiedAuth.dbManager.isPlayerRegistered(player.username)){
-                player.addChatMessage("greeter.login");
+                player.sendTranslatedChatMessage("greeter.login");
             } else {
-                player.addChatMessage("greeter.registration");
+                player.sendTranslatedChatMessage("greeter.registration");
             }
         }
     }

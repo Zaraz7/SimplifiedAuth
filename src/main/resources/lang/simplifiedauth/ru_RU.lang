@@ -1,0 +1,3 @@
+greeter.registration=Используй /register <пароль> <пароль> для регистрации
+greeter.login=Используй /login <пароль> чтобы войти
+greeter.authorized=Успешная авторизация!
