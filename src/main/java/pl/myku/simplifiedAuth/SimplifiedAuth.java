@@ -24,6 +24,7 @@ public class SimplifiedAuth implements ModInitializer {
         props.setProperty("Port", "");
         props.setProperty("Username", "");
         props.setProperty("Password", "");
+        props.setProperty("LoginKickTimeout", "1600");
         config = new ConfigHandler(MOD_ID, props);
     }
 
