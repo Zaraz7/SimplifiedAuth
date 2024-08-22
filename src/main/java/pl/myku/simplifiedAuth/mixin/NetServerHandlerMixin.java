@@ -22,7 +22,8 @@ import java.util.List;
 abstract class NetServerHandlerMixin {
 
     private static long teleportTimeout = 0;
-    private static int timeout = 600;
+    private static final int timeoutBase = SimplifiedAuth.config.getInt("LoginKickTimeout");
+    private static int timeout = timeoutBase;
     @Shadow public static Logger logger = Logger.getLogger("Minecraft");
     @Shadow private EntityPlayerMP playerEntity;
     @Shadow private MinecraftServer mcServer;
@@ -63,7 +64,7 @@ abstract class NetServerHandlerMixin {
             return;
         }
         if(timeout < 1){
-            timeout = 600;
+            timeout = timeoutBase;
             this.kickPlayer("Didn't authorize, timeout..");
         }
         if(System.nanoTime() >= (teleportTimeout + 5000000L)){
