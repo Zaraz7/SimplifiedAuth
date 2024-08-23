@@ -126,4 +126,19 @@ public class JsonDbManager implements IDbManager {
         db.getAsJsonArray("Users").add(player);
         saveDb();
     }
+
+    public Boolean removePlayerFromDatabase(String username) {
+        if (!db.getAsJsonArray("Users").isEmpty()) {
+            for (int i = 0; i < db.getAsJsonArray("Users").size(); i++) {
+                JsonObject tmpUser = db.getAsJsonArray("Users").get(i).getAsJsonObject();
+                if (tmpUser.get("user").getAsString().equals(username)) {
+                    db.getAsJsonArray("Users").remove(i);
+                    saveDb();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
