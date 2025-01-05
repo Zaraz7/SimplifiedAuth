@@ -1,10 +1,9 @@
 package pl.myku.simplifiedAuth;
 
-import net.minecraft.core.entity.player.EntityPlayer;
 import java.util.HashMap;
 
 public class PlayerManager extends HashMap<String, Player>{
-    public Player get(EntityPlayer player){
+    public Player get(net.minecraft.core.entity.player.Player player){
         String username = player.username;
         if (containsKey(username)){
             return super.get(username);

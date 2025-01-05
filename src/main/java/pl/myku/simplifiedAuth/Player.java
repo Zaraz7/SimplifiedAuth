@@ -1,10 +1,9 @@
 package pl.myku.simplifiedAuth;
 
-import net.minecraft.core.entity.player.EntityPlayer;
 public class Player {
-    private final EntityPlayer player;
+    private final net.minecraft.core.entity.player.Player player;
     private boolean authorized = false;
-    public Player(EntityPlayer player){
+    public Player(net.minecraft.core.entity.player.Player player){
         this.player = player;
     }
 
