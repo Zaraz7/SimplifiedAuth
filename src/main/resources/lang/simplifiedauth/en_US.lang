@@ -1,3 +1,14 @@
 greeter.registration=Use /register <password> <password> for registration
+greeter.already_registered=Player is already registered.
 greeter.login=Use /login <password> for login
 greeter.authorized=Successful authorization!
+greeter.registered_successfully=Registered successfully.
+greeter.unknown_error=Unknown error has occurred!
+greeter.passwords_not_match=Passwords do not match!
+greeter.not_registered=Player is not registered. Use /register <password>.
+greeter.already_logged_in=You're already logged in.
+greeter.wrong_password=Wrong password.
+greeter.not_authorized=User is not authorized.
+greeter.password_changed=Password changed.
+greeter.user_reset_successful=User reset successful
+greeter.no_such_user=There is no such user

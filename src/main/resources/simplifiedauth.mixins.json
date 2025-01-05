@@ -8,8 +8,6 @@
     "client": [
     ],
     "server": [
-        "CommandsMixin",
-        "EntityPlayerMixin",
         "EntityPlayerMPMixin",
         "ServerConfigurationManagerMixin",
         "NetServerHandlerMixin"

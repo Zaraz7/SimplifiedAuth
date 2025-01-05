@@ -1,46 +1,60 @@
 package pl.myku.simplifiedAuth.commands;
 
-import net.minecraft.core.entity.player.EntityPlayer;
-import net.minecraft.core.net.command.Command;
-import net.minecraft.core.net.command.CommandHandler;
-import net.minecraft.core.net.command.CommandSender;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import com.mojang.brigadier.tree.CommandNode;
+import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.lang.I18n;
+import net.minecraft.core.net.command.CommandManager;
+import net.minecraft.core.net.command.CommandSource;
+
 import pl.myku.simplifiedAuth.SimplifiedAuth;
 
 
-public class RegisterCommand extends Command {
+public class RegisterCommand implements CommandManager.CommandRegistry {
+    private static final SimpleCommandExceptionType UNKNOWN_ERROR = new SimpleCommandExceptionType(() -> {
+        return I18n.getInstance().translateKey("greeter.unknown_error");
+    });
+    private static final SimpleCommandExceptionType PASSWORDS_NOT_MATCH = new SimpleCommandExceptionType(() -> {
+        return I18n.getInstance().translateKey("greeter.passwords_not_match");
+    });
+
     public RegisterCommand() {
-        super("register");
+
     }
 
-    public boolean execute(CommandHandler handler, CommandSender sender, String[] args) {
-        EntityPlayer player;
-        if(sender.getPlayer() != null) {
-            player = sender.getPlayer();
-            if(SimplifiedAuth.dbManager.isPlayerRegistered(player.username)){
-                sender.sendMessage("Player is already registered.");
-                return true;
-            }
-            else if(args.length == 2){
-                if(args[0].equals(args[1])){
-                    SimplifiedAuth.dbManager.addPlayerToDatabase(player.username, args[0]);
-                    if(SimplifiedAuth.dbManager.isPlayerRegistered(player.username)){
-                        SimplifiedAuth.playerManager.get(player).authorize();
-                        sender.sendMessage("Registered successfully.");
-                        return true;
-                    }
-                    sender.sendMessage("Unknown error has occurred!.");
-                }
-                sender.sendMessage("Passwords need to match.");
-            }
-        }
-        return false;
-    }
-
-    public boolean opRequired(String[] args) {
-        return false;
-    }
-
-    public void sendCommandSyntax(CommandHandler handler, CommandSender sender) {
-        sender.sendMessage("/register <password> <password>");
+    public void register(CommandDispatcher<CommandSource> dispatcher) {
+        CommandNode<CommandSource> command = dispatcher.register((LiteralArgumentBuilder<CommandSource>) (Object) LiteralArgumentBuilder.literal("register")
+                .then(RequiredArgumentBuilder.argument("password", StringArgumentType.word())
+                        .then(RequiredArgumentBuilder.argument("passwordConfirm", StringArgumentType.word())
+                                .executes((c) -> {
+                                    CommandSource source = (CommandSource)c.getSource();
+                                    Player player = source.getSender();
+                                    String arg1 = c.getArgument("password", String.class);
+                                    String arg2 = c.getArgument("passwordConfirm", String.class);
+                                    if(SimplifiedAuth.dbManager.isPlayerRegistered(player.username)){
+                                        player.sendTranslatedChatMessage("greeter.already_registered");
+                                        return Command.SINGLE_SUCCESS;
+                                    }
+                                    if (arg1.equals(arg2)) {
+                                        SimplifiedAuth.dbManager.addPlayerToDatabase(player.username, arg1);
+                                        if(SimplifiedAuth.dbManager.isPlayerRegistered(player.username)){
+                                            SimplifiedAuth.playerManager.get(player).authorize();
+                                            player.sendTranslatedChatMessage("greeter.registered_successfully");
+                                            return Command.SINGLE_SUCCESS;
+                                        }
+                                        throw UNKNOWN_ERROR.create();
+                                    } else {
+                                        throw PASSWORDS_NOT_MATCH.create();
+                                    }
+                                })
+                        )
+                )
+        );
+        dispatcher.register( (LiteralArgumentBuilder<CommandSource>) (Object) LiteralArgumentBuilder.literal("reg").redirect((CommandNode <Object>) (Object) command));
     }
 }
