@@ -1,3 +1,14 @@
 greeter.registration=Используй /register <пароль> <пароль> для регистрации
 greeter.login=Используй /login <пароль> чтобы войти
 greeter.authorized=Успешная авторизация!
+greeter.already_registered=Игрок уже зарегистрирован
+greeter.registered_successfully=Регистрация завершена успешно
+greeter.unknown_error=Случилась неизвестная ошибка!
+greeter.passwords_not_match=Пароли не совпадают!
+greeter.not_registered=Не зарегистрирован. Используй /register <password> для регистрации
+greeter.already_logged_in=Вы уже авторизованы
+greeter.wrong_password=Пароль неверен
+greeter.not_authorized=Не авторизован
+greeter.password_changed=Пароль успешно изменён
+greeter.user_reset_successful=Пользователь был сброшен успешно
+greeter.no_such_user=Такого пользователя не существует
