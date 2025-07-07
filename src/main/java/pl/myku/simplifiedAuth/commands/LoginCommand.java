@@ -3,9 +3,9 @@ package pl.myku.simplifiedAuth.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.arguments.ArgumentTypeString;
+import com.mojang.brigadier.builder.ArgumentBuilderLiteral;
+import com.mojang.brigadier.builder.ArgumentBuilderRequired;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.CommandNode;
 import net.minecraft.core.entity.player.Player;
@@ -29,8 +29,8 @@ public class LoginCommand implements CommandManager.CommandRegistry {
     }
 
     public void register(CommandDispatcher<CommandSource> dispatcher) {
-        CommandNode<CommandSource> command = dispatcher.register((LiteralArgumentBuilder<CommandSource>) (Object) LiteralArgumentBuilder.literal("login")
-                .then(RequiredArgumentBuilder.argument("password", StringArgumentType.word())
+        CommandNode<CommandSource> command = dispatcher.register((ArgumentBuilderLiteral<CommandSource>) (Object) ArgumentBuilderLiteral.literal("login")
+                .then(ArgumentBuilderRequired.argument("password", ArgumentTypeString.word())
                         .executes((c) -> {
                             CommandSource source = (CommandSource)c.getSource();
                             Player player = source.getSender();

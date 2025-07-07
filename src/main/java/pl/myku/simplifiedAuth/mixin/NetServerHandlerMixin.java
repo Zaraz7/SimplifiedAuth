@@ -79,7 +79,7 @@ abstract class NetServerHandlerMixin {
     }
 
     @Inject(method="handlePlace", at=@At("HEAD"), cancellable = true)
-    public void handlePlace(PacketUseItem packet, CallbackInfo ci){
+    public void handlePlace(PacketUseOrPlaceItemStack packet, CallbackInfo ci){
         if(SimplifiedAuth.playerManager.get(playerEntity).isAuthorized()) {
             return;
         }
