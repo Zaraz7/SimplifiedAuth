@@ -22,7 +22,6 @@ import java.util.List;
 
 @Mixin(value = PacketHandlerServer.class, remap = false)
 abstract class NetServerHandlerMixin {
-
     private static long teleportTimeout = 0;
     private static final int timeoutBase = SimplifiedAuth.config.getInt("LoginKickTimeout");
     private static int timeout = timeoutBase;
